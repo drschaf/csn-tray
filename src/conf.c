@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-#include "conf.h"
+#include "../include/conf.h"
 
 struct csn_api_config readconfig(const char* filename)
 {
@@ -34,7 +36,7 @@ struct csn_api_config readconfig(const char* filename)
 void writeconfig(const char* filename, struct csn_api_config myconfig)
 {
 	FILE *conffile;
-	char line[81], key[16], value[64];
+	char line[81];
 
 	conffile = fopen(filename, "w+");
 

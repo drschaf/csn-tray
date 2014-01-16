@@ -6,7 +6,7 @@
 #include <gtk/gtk.h>
 
 struct gtk_conf_window {
-	GtkWindow *window;
+	GtkWidget *window;
 	GtkWidget *api_inputfield;
 	GtkWidget *refresh_inputfield;
 	GtkWidget *warn_box;

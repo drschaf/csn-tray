@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#include "csn_api.h"
-#include "tray.h"
-#include "conf.h"
+#include "include/csn_api.h"
+#include "include/tray.h"
+#include "include/conf.h"
 
 int main (int argc, char **argv)
 {
@@ -13,18 +13,14 @@ int main (int argc, char **argv)
 	char configfile[256];
 	char configdir[256];
 
-//#ifdef OS_UNIX || __linux__
-//#define _OS
+#ifdef _WIN32
+#warning you should use a backdoor-free OS like GNU/Linux
+	sprintf(configdir, "%s\%s", getenv("APPDATA"), "csntray");
+	sprintf(configfile, "%s\%s", configdir, "config.shit");
+#else
 	sprintf(configdir, "%s/%s", getenv("HOME"), ".csntray");
 	sprintf(configfile, "%s/%s", configdir, "config.shit");
-//#endif
-//#define _OS
-//#ifdef OS_WINDOWS
-	// windows related fuck
-//#endif
-//#ifndef _OS
-//#error wtf is your OS
-//#endif
+#endif
 
 	myconf = readconfig(configfile);
 

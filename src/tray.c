@@ -2,17 +2,17 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
-#include "tray.h"
-#include "conf.h"
-#include "csn_api.h"
-#include "icon.h"
+#include "../include/tray.h"
+#include "../include/conf.h"
+#include "../include/csn_api.h"
+#include "../include/icon.h"
 
 // you shouldn't spend too much time in this file
 // neither did I
 
 gboolean update_tray(GtkWidget *widget)
 {
-	char *api;
+	const char *api;
 	char urlformat[] = "https://www.csn.tu-chemnitz.de/api/%s";
 	char url[256];
 	char tooltipformat[] = "Total traffic (%s): %i MiB (%.1f%%) (%s)";
@@ -44,8 +44,7 @@ gboolean update_tray(GtkWidget *widget)
 	tm_info = localtime(&timer);
 	strftime(timestring, 32, "%H:%M", tm_info);
 
-	happyhour = (tm_info->tm_sec+tm_info->tm_min*60+tm_info->tm_hour*3600)
-		< 28800;
+	happyhour = (myval.updated+3600)%86400	< 28800;
 
 //	happyhour = (myval.updated % 86400) < 28800;
 	totaltraffic = happyhour ? myval.h_total : myval.n_total;
@@ -83,6 +82,9 @@ gboolean update_tray(GtkWidget *widget)
 GtkWidget* tray_bakeconfwindow()
 {
 	GtkWidget *confbox;
+	GtkWidget *apikeybox, *api_testbutton;
+	GtkWidget *refresh_box, *refresh_label;
+	GtkWidget *closebox, *closebutton;
 
 	conf_window.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(conf_window.window),
@@ -95,10 +97,6 @@ GtkWidget* tray_bakeconfwindow()
 	confbox = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(conf_window.window), confbox);
 	gtk_widget_show(confbox);
-
-	GtkWidget *apikeybox, *api_inputfield, *api_testbutton;
-	GtkWidget *refresh_box, *refresh_label, *refresh_inputfield;
-	GtkWidget *closebox, *closebutton;
 
 	apikeybox = gtk_hbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(confbox), apikeybox);
@@ -138,7 +136,7 @@ GtkWidget* tray_bakeconfwindow()
 	/* ***** API key frame ***** */
 
 	/* ----- interface frame: warn options ----- */
-	GtkWidget *warncheckbox, *warncheckbox_box, *warn_inputfield;
+	GtkWidget *warncheckbox_box;
 
 	warncheckbox_box = gtk_hbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(confbox), warncheckbox_box);
@@ -177,7 +175,7 @@ GtkWidget* tray_bakeconfwindow()
 void tray_test_api(GtkWidget *widget, gpointer data)
 {
 	GtkWidget *e;
-	char *api;
+	const char *api;
 	char urlformat[] = "https://www.csn.tu-chemnitz.de/api/%s";
 	char url[256];
 
@@ -277,7 +275,7 @@ void tray_set_icon(GtkStatusIcon *tray_icon, char* csn_icon[])
 GtkStatusIcon *create_tray_icon()
 {
 	GtkStatusIcon *tray_icon;
-	GdkPixbuf *icon;
+//	GdkPixbuf *icon;
 	tray_icon = gtk_status_icon_new();
 /*	g_signal_connect(G_OBJECT(tray_icon), "activate",
 			G_CALLBACK(tray_icon_on_click), NULL);*/

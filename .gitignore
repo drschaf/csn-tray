@@ -4,6 +4,8 @@
 
 # Compiled source #
 ###################
+csn-tray
+obj/*
 bin/*
 *.com
 *.class

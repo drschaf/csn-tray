@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <curl/curl.h>
+#include <string.h>
 
-#include "csn_api.h"
+#include "../include/csn_api.h"
 
 size_t csn_api_writecallback(void *b, size_t size, size_t rlen, void *p)
 {

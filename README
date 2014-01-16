@@ -3,7 +3,7 @@ csn-tray
 
 Tray Icon that warns you if you reach a specified threshold of your CSN quota.
 Hacked together in C. Icons were exported to XPM via GIMP, god bless GIMP. And
-thanks to @LittleFox96 for helping out with cmake.
+thanks to @LittleFox94 for helping out with cmake.
 
 Uses cmake because cmake's Makefile makes a fancy make. To compile type:
 

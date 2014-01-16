@@ -7,7 +7,7 @@ thank to LittleFox for helping out with cmake.
 
 Uses cmake because cmake's Makefile makes a fancy make. To compile type:
 
-cmake .
-make
+$ cmake .
+$ make
 
 Have fun. Please fork and improve, I have actually no clue what I did here.

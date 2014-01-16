@@ -14,7 +14,7 @@ int main (int argc, char **argv)
 	char configdir[256];
 
 #ifdef _WIN32
-#warning Detected 2703 backdoors in your operating system.
+#warning Detected 2703 backdoors in your "operating" system.
 	sprintf(configdir, "%s\%s", getenv("APPDATA"), "csntray");
 	sprintf(configfile, "%s\%s", configdir, "config.shit");
 #else

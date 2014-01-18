@@ -10,6 +10,11 @@
 // you shouldn't spend too much time in this file
 // neither did I
 
+static void update_tray_cb(GtkWidget *widget, gpointer data)
+{
+	update_tray((GtkWidget*)(data));
+}
+
 gboolean update_tray(GtkWidget *widget)
 {
 	const char *api;
@@ -45,10 +50,7 @@ gboolean update_tray(GtkWidget *widget)
 	strftime(timestring, 32, "%H:%M", tm_info);
 
 	happyhour = (myval.updated+3600)%86400	< 28800;
-
-//	happyhour = (myval.updated % 86400) < 28800;
 	totaltraffic = happyhour ? myval.h_total : myval.n_total;
-
 	p = 100*myval.n_total / QUOTA;
 
 	if (happyhour)
@@ -73,7 +75,6 @@ gboolean update_tray(GtkWidget *widget)
 	} else {
 		tray_set_icon(thetray, csn_icon);
 	}
-
 	gtk_status_icon_set_tooltip(tray_icon, tooltip);
 
 	return TRUE;
@@ -275,25 +276,38 @@ void tray_set_icon(GtkStatusIcon *tray_icon, char* csn_icon[])
 GtkStatusIcon *create_tray_icon()
 {
 	GtkStatusIcon *tray_icon;
-//	GdkPixbuf *icon;
-	tray_icon = gtk_status_icon_new();
-/*	g_signal_connect(G_OBJECT(tray_icon), "activate",
-			G_CALLBACK(tray_icon_on_click), NULL);*/
-
 	GtkWidget *confwindow;
+	GtkWidget *traymenu, *traymenu_exit, *traymenu_conf, *traymenu_refresh;
+
+	tray_icon = gtk_status_icon_new();
 	confwindow = tray_bakeconfwindow();
 
-	GtkWidget *traymenu, *traymenu_exit, *traymenu_conf;
 	traymenu = gtk_menu_new();
-	traymenu_conf = gtk_menu_item_new_with_label("Settings");
-	traymenu_exit = gtk_menu_item_new_with_label("Quit");
+	traymenu_conf = gtk_image_menu_item_new_with_label("Settings");
+	traymenu_refresh = gtk_image_menu_item_new_with_label("Refresh");
+	traymenu_exit = gtk_image_menu_item_new_with_label("Quit");
+
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(traymenu_conf),
+		GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_PROPERTIES,
+			GTK_ICON_SIZE_MENU)));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(traymenu_refresh),
+		GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_REFRESH,
+			GTK_ICON_SIZE_MENU)));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(traymenu_exit),
+		GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_QUIT,
+			GTK_ICON_SIZE_MENU)));
 
 	g_signal_connect(G_OBJECT(traymenu_conf), "activate",
 			G_CALLBACK(tray_show), confwindow);
+	g_signal_connect(G_OBJECT(traymenu_refresh), "activate",
+			G_CALLBACK(update_tray_cb), tray_icon);
 	g_signal_connect(G_OBJECT(traymenu_exit), "activate",
 			G_CALLBACK(tray_exit), NULL);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(traymenu), traymenu_conf);
+	gtk_menu_shell_append(GTK_MENU_SHELL(traymenu), traymenu_refresh);
+	gtk_menu_shell_append(GTK_MENU_SHELL(traymenu),
+			GTK_WIDGET(gtk_separator_menu_item_new()));
 	gtk_menu_shell_append(GTK_MENU_SHELL(traymenu), traymenu_exit);
 
 	gtk_widget_show_all(traymenu);

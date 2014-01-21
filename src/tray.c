@@ -49,7 +49,7 @@ gboolean update_tray(GtkWidget *widget)
 	tm_info = localtime(&timer);
 	strftime(timestring, 32, "%H:%M", tm_info);
 
-	happyhour = (myval.updated+3600)%86400	< 28800;
+	happyhour = 1 || (myval.updated+3600)%86400 < 28800;
 	totaltraffic = happyhour ? myval.h_total : myval.n_total;
 	p = 100*myval.n_total / QUOTA;
 
